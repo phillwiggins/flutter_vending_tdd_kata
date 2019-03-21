@@ -5,6 +5,7 @@ import 'package:vending_kata/data/repository/VendingMachineRepository.dart';
 import 'package:vending_kata/domain/bloc/bloc_base.dart';
 
 class VendingMachineBloc implements BlocBase {
+
   void init(VendingMachineRepository vendingMachineRepository) {
     if (this.vendingMachine == null) {
       this.vendingMachine = vendingMachineRepository.getVendingMachine();
@@ -20,15 +21,15 @@ class VendingMachineBloc implements BlocBase {
   }
 
   final BehaviorSubject<String> _display =
-      BehaviorSubject<String>(seedValue: '');
+      BehaviorSubject<String>();
   final BehaviorSubject<String> _change =
-      BehaviorSubject<String>(seedValue: '');
+      BehaviorSubject<String>();
   final BehaviorSubject<String> _product1 =
-      BehaviorSubject<String>(seedValue: '');
+      BehaviorSubject<String>();
   final BehaviorSubject<String> _product2 =
-      BehaviorSubject<String>(seedValue: '');
+      BehaviorSubject<String>();
   final BehaviorSubject<String> _product3 =
-      BehaviorSubject<String>(seedValue: '');
+      BehaviorSubject<String>();
 
   Stream<String> get display => _display.stream;
 

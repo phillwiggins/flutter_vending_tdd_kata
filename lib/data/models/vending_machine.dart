@@ -18,7 +18,6 @@ const int _coinFiftyPence = 50;
 /// - static: one of the base values that will show when nothing else is
 /// - normal: not static, therefore it will be shown once and will revert to the appropriate 'static'
 /// - format: like normal, but also must be run through string.Format() with a float (price/value/GBP)
-const String messageFormatAvailable = "£";
 const String messageInsertCoin = "INSERT COIN";
 const String messageExactChangeOnly = "EXACT CHANGE ONLY";
 const String messagePrice = "PRICE";
@@ -76,7 +75,7 @@ class VendingMachine implements VendingContract {
           // valid
           this._currencyInGBPp += GBPp;
           this._lastMessage =
-              "$messageFormatAvailable, ${_currencyInGBPp / 100}";
+              "£ ${_currencyInGBPp / 100}";
           return true;
         }
       default:
@@ -105,7 +104,7 @@ class VendingMachine implements VendingContract {
         }
       }
     } else {
-      _lastMessage = "$messageFormatAvailable ${_currencyInGBPp / 100}";
+      _lastMessage = "${_currencyInGBPp / 100}";
     }
 
     return msgToDeliver;
@@ -139,7 +138,7 @@ class VendingMachine implements VendingContract {
 
     if (_currencyInGBPp - product.getCostInGBPp() < 0) {
       /// not enough money
-      _lastMessage = "$messagePrice, ${product.getCostInGBPp() / 100}";
+      _lastMessage = "$messagePrice £${product.getCostInGBPp() / 100}";
       return false;
     }
 

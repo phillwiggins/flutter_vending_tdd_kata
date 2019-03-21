@@ -17,7 +17,7 @@ class Product {
     }
 
     if (costInGBPp < 0) {
-      throw new Exception("costInUsd must be zero or greater");
+      throw new Exception("costInGBPp must be zero or greater");
     }
 
     this._name = name;
@@ -49,12 +49,5 @@ class Product {
     }
 
     return this.equals(obj);
-  }
-
-  @override int hashCode() {
-    int hash = 17;
-    hash = hash * 31 + _name.hashCode;
-    hash = hash * 13 + _costInGBPp;
-    return hash;
   }
 }

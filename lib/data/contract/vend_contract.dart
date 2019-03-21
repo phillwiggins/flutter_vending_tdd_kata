@@ -17,20 +17,20 @@ abstract class VendingContract {
   /// Non-deterministic: display may change from one call to the next
   /// depending on the state of the machine
   ///
-  /// @return the message to display to the user, will be listed as USD if
+  /// @return the message to display to the user, will be listed as GBP if
   /// any value is shown
   String updateAndGetCurrentMessageForDisplay();
 
   /// Gets the value of coins in the return (either that were rejected during
   /// insert, or user requested a return
   ///
-  /// @return the value of coins in the return, as cents (100th of a USD)
+  /// @return the value of coins in the return, as cents (100th of a GBP)
   int getAcceptedGBPp();
 
   /// Gets the value of coins in the return (either that were rejected during
   /// insert, or user requested a return
   ///
-  /// @return the value of coins in the return, as cents (100th of a USD)
+  /// @return the value of coins in the return, as cents (100th of a GBP)
   int getGBPpInReturn();
 
   /// Purchases the requested product.
