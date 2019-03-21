@@ -2,6 +2,8 @@ import 'dart:core';
 
 import 'dart:core';
 
+import 'package:vending_kata/domain/utils.dart';
+
 ///
 /// A Product
 ///
@@ -38,7 +40,7 @@ class Product {
   }
 
   String toString() {
-    return "$_name/$_costInGBPp / 100";
+    return "$_name/${convertToPence(_costInGBPp)}";
   }
 
   bool equals(Object obj) {

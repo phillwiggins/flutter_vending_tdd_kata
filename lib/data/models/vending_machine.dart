@@ -1,6 +1,7 @@
 import 'package:vending_kata/data/contract/vend_contract.dart';
 import 'package:vending_kata/data/models/product.dart';
 import 'package:vending_kata/data/models/stock.dart';
+import 'package:vending_kata/domain/utils.dart';
 
 /// 5 pence (£0.05)
 const int _coinFivePence = 5;
@@ -60,7 +61,7 @@ class VendingMachine implements VendingContract {
   String _lastMessage = messageInsertCoin;
 
   String toString() {
-    return "£$_currencyInGBPp in flight, £$_changeInGBPp in change, and %$availableStock products";
+    return "£${convertToPence(_currencyInGBPp)} in flight, £${convertToPence(_changeInGBPp)} in change, and ${availableStock.length} products";
   }
 
   @override
@@ -104,7 +105,7 @@ class VendingMachine implements VendingContract {
         }
       }
     } else {
-      _lastMessage = "${_currencyInGBPp / 100}";
+      _lastMessage = "${convertToPence(_currencyInGBPp)}";
     }
 
     return msgToDeliver;
@@ -138,7 +139,7 @@ class VendingMachine implements VendingContract {
 
     if (_currencyInGBPp - product.getCostInGBPp() < 0) {
       /// not enough money
-      _lastMessage = "$messagePrice £${product.getCostInGBPp() / 100}";
+      _lastMessage = "$messagePrice £${convertToPence(product.getCostInGBPp())}";
       return false;
     }
 

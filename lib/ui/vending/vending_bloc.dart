@@ -22,6 +22,8 @@ class VendingMachineBloc implements BlocBase {
 
   final BehaviorSubject<String> _display =
       BehaviorSubject<String>();
+  final BehaviorSubject<String> _summary =
+  BehaviorSubject<String>();
   final BehaviorSubject<String> _change =
       BehaviorSubject<String>();
   final BehaviorSubject<String> _product1 =
@@ -35,6 +37,8 @@ class VendingMachineBloc implements BlocBase {
 
   Stream<String> get change => _change.stream;
 
+  Stream<String> get summary => _summary.stream;
+
   Stream<String> get product1 => _product1.stream;
 
   Stream<String> get product2 => _product2.stream;
@@ -44,6 +48,8 @@ class VendingMachineBloc implements BlocBase {
   void setDisplay(String message) => _display.add(message);
 
   void setChange(String message) => _change.add(message);
+
+  void setSummary(String message) => _summary.add(message);
 
   VendingMachine vendingMachine;
 
@@ -110,6 +116,7 @@ class VendingMachineBloc implements BlocBase {
 
     setDisplay(vendingMachine.updateAndGetCurrentMessageForDisplay());
     setChange("Collect ${vendingMachine.getGBPpInReturn()}");
+    setSummary(vendingMachine.toString());
   }
 
   @override
@@ -119,5 +126,6 @@ class VendingMachineBloc implements BlocBase {
     _product1.close();
     _product2.close();
     _product3.close();
+    _summary.close();
   }
 }

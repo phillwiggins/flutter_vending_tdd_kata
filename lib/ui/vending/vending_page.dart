@@ -26,7 +26,11 @@ class VendingPage extends StatelessWidget {
         title: Text(title),
       ),
       body: Center(
-          child: Row(
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Row(
         children: <Widget>[
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -41,19 +45,28 @@ class VendingPage extends StatelessWidget {
             children: <Widget>[
               _currentCoinSizeText(bloc),
               _displayText(bloc),
-              _returnButton(bloc),
+              _getSpacer(),
+              Text('Products'),
               _productOneButton(bloc),
               _productTwoButton(bloc),
               _productThreeButton(bloc),
+              _getSpacer(),
+              Text('Options'),
               _insertCoinsButton(bloc),
-              _collectChangeButton(bloc)
+              _collectChangeButton(bloc),
+              _returnButton(bloc),
             ],))
         ],
-          )
+                ),
+                _getSpacer(height: 25),
+                _getCurrentText(bloc)
+              ]
       )
+      ),
     );
-    // This trailing comma makes auto-formatting nicer for build methods
   }
+
+  SizedBox _getSpacer({double height = 10}) => SizedBox(height: height);
 
   Widget _productOneButton(VendingMachineBloc bloc) {
     return StreamBuilder<String>(
@@ -93,7 +106,7 @@ class VendingPage extends StatelessWidget {
 
   Widget _returnButton(VendingMachineBloc bloc) {
     return RaisedButton(
-      child: Text('Return'),
+      child: Text('Return Coins'),
       onPressed: () => bloc.returnCoins(),
     );
   }
@@ -138,5 +151,15 @@ class VendingPage extends StatelessWidget {
           'assets/images/vending.jpg',
           fit: BoxFit.fill,
         ));
+  }
+
+  Widget _getCurrentText(VendingMachineBloc bloc) {
+    return StreamBuilder<String>(
+      stream: bloc.summary,
+      initialData: '',
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        return Center(child: Text(snapshot.data));
+      },
+    );
   }
 }
