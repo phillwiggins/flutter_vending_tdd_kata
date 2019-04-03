@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vending_kata/data/repository/VendingMachineRepository.dart';
+import 'package:vending_kata/data/repository/vending_repository.dart';
 import 'package:vending_kata/domain/bloc/bloc_provider.dart';
 import 'package:vending_kata/domain/utils.dart';
 import 'package:vending_kata/ui/vending/vending_bloc.dart';
@@ -119,7 +119,7 @@ class VendingPage extends StatelessWidget {
   Widget _insertCoinsButton(VendingMachineBloc bloc) {
     return RaisedButton(
       child: Text('Insert Coins'),
-      onPressed: () => bloc.insertCoin(),
+      onPressed: () => bloc.insertCoin(bloc.coinSize),
     );
   }
 

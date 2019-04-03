@@ -19,8 +19,8 @@ class VendingMachineRepository {
 
   VendingMachineRepository._internal() {
     final List<Stock> stock = List();
-    stock.add(new Stock(Product("Cola", 100), 2));
-    stock.add(new Stock(Product("Crisps", 50), 1));
+    stock.add(new Stock(Product("Cola", 100), 10));
+    stock.add(new Stock(Product("Crisps", 50), 15));
     stock.add(new Stock(Product("Chocolate", 65), 50));
     _vendingMachine = VendingMachine(stock);
   }

@@ -1,7 +1,7 @@
 import 'package:rxdart/src/subjects/behavior_subject.dart';
 import 'package:vending_kata/data/models/product.dart';
 import 'package:vending_kata/data/models/vending_machine.dart';
-import 'package:vending_kata/data/repository/VendingMachineRepository.dart';
+import 'package:vending_kata/data/repository/vending_repository.dart';
 import 'package:vending_kata/domain/bloc/bloc_base.dart';
 
 class VendingMachineBloc implements BlocBase {
@@ -16,7 +16,7 @@ class VendingMachineBloc implements BlocBase {
       _product2.sink.add(products[1].getName());
       _product3.sink.add(products[2].getName());
 
-      updateDisplay();
+      updateDisplay('');
     }
   }
 
@@ -55,86 +55,24 @@ class VendingMachineBloc implements BlocBase {
 
   VendingMachine vendingMachine;
 
-  void changeCoinSize() {
-    switch (coinSize) {
-      case 5:
-        coinSize = 10;
-        break;
-      case 10:
-        coinSize = 20;
-        break;
-      case 20:
-        coinSize = 50;
-        break;
-      case 50:
-        coinSize = 5;
-    }
-  }
+  void changeCoinSize() {}
 
-  Stream<String> getVendingMachineProductDisplay(int productIndex) {
-    switch (productIndex) {
-      case 0:
-        return product1;
-      case 1:
-        return product2;
-      case 2:
-        return product3;
-      default:
-        throw new Exception(
-            "Only 3 products available but item ${productIndex - 1} was requested");
-    }
-  }
+  Stream<String> getVendingMachineProductDisplay(int productIndex) {}
 
-  void collectCoins() {
-    if (this.vendingMachine == null) {
-      throw new Exception(
-          "you must call init() before calling any other methods in this view model");
-    }
+  void collectCoins() {}
 
-    vendingMachine.collectCoins();
-    updateDisplay();
-  }
-
-  bool insertCoin() {
-    if (vendingMachine == null) {
-      throw new Exception(
-          "you must call init() before calling any other methods in this view model");
-    }
-
+  bool insertCoin(int coinValue) {
     final bool result = vendingMachine.insertCoin(coinSize);
-    updateDisplay();
+    updateDisplay("$coinValue inserted");
     return result;
   }
 
-  void purchaseProduct(int productIndex) {
-    if (vendingMachine == null) {
-      throw Exception(
-          "you must call init() before calling any other methods in this view model");
-    }
+  void purchaseProduct(int productIndex) {}
 
-    vendingMachine.purchaseProduct(productIndex);
-    updateDisplay();
-  }
+  void returnCoins() {}
 
-  void returnCoins() {
-    if (vendingMachine == null) {
-      throw Exception(
-          "you must call init() before calling any other methods in this view model");
-    }
-
-    this.vendingMachine.returnCoins();
-    updateDisplay();
-  }
-
-  void updateDisplay() {
-    if (vendingMachine == null) {
-      throw Exception(
-          "you must call init() before calling any other methods in this view model");
-    }
-
-    setDisplay(vendingMachine.updateAndGetCurrentMessageForDisplay());
-    setChange("Collect ${vendingMachine.getGBPpInReturn()}");
-    setSummary(vendingMachine.toString());
+  void updateDisplay(String display) {
+    setDisplay(display);
   }
 
   @override

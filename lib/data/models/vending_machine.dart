@@ -1,7 +1,6 @@
 import 'package:vending_kata/data/contract/vend_contract.dart';
 import 'package:vending_kata/data/models/product.dart';
 import 'package:vending_kata/data/models/stock.dart';
-import 'package:vending_kata/domain/utils.dart';
 
 /// 5 pence (£0.05)
 const int _coinFivePence = 5;
@@ -54,132 +53,51 @@ class VendingMachine implements VendingContract {
   /// For this demo, assumes the value can be covered by any amount of coins.
   /// In other words, does not track individual coins available as change.
   ///
-  /// Starts with $4.00 in change (since the kata requirements did not specify
-  /// the amount)
+  /// Starts with £4.00 in change - Can be changed
   int _changeInGBPp = 400;
 
   String _lastMessage = messageInsertCoin;
 
   String toString() {
-    return "£${convertToPence(_currencyInGBPp)} in flight, £${convertToPence(_changeInGBPp)} in change, and ${availableStock.length} products";
+    return
+      "£0.00 in flight, "
+          "£0.00 in change, and "
+          "0 products";
   }
 
   @override
   bool insertCoin(int GBPp) {
-    /// check for valid coin
-    switch (GBPp) {
-      case _coinFivePence:
-      case _coinTenPence:
-      case _coinTwentyPence:
-      case _coinFiftyPence:
-        {
-          // valid
-          this._currencyInGBPp += GBPp;
-          this._lastMessage =
-              "£ ${_currencyInGBPp / 100}";
-          return true;
-        }
-      default:
-        // invalid coins: pennies, drachmas, kronors, pfennigs, etc.
-        _currencyInGBPp += GBPp;
-        return false;
-    }
+    return false;
   }
 
   String updateAndGetCurrentMessageForDisplay() {
-    String msgToDeliver = _lastMessage;
-
-    /// now that any temporary message is saved for deliver, reset the next call to the
-    /// current state of the machine
-    if (_currencyInGBPp == 0) {
-      // no money inserted yet
-      _lastMessage = messageInsertCoin;
-
-      /// REQUIREMENT: When the machine is not able to make change with the money in the machine for any of the items that it sells, it will display EXACT CHANGE ONLY instead of INSERT COIN.
-      /// Personal note: The provided description is a bit trivialized. The real logic needs to check change coins available and the matrix of what possible combinations can provide what values, the minimum and maximum amount of value for an accepted coin, whether or not accepted coins may also be used in change (for example, paper dollars can't be returned as change, but other coins should be able to funnel through the system as change if too many are provided), the price of all items, and figure out what the limits of all those items combined are; which gets complicated;
-      /// therefore, sticking with the naive algorithm of is there enough change value to at least match the price of the most expensive item
-      for (final Stock stock in availableStock) {
-        if (stock.getProduct().getCostInGBPp() > _changeInGBPp) {
-          _lastMessage = messageExactChangeOnly;
-          break;
-        }
-      }
-    } else {
-      _lastMessage = "${convertToPence(_currencyInGBPp)}";
-    }
-
-    return msgToDeliver;
+    return '';
   }
 
   @override
   int getAcceptedGBPp() {
-    return _currencyInGBPp;
+    return null;
   }
 
   @override
   int getGBPpInReturn() {
-    return _returnInGBPp;
+    return null;
   }
 
   @override
   bool purchaseProduct(int productIndex) {
-    return productIndex < availableStock.length &&
-        _tryToPurchase(availableStock[productIndex]);
+    return false;
   }
 
   bool _tryToPurchase(final Stock stock) {
-    /// check stock
-    if (stock.getAvailable() == 0) {
-      _lastMessage = messageSoldOut;
-      return false;
-    }
-
-    /// check available currency compared to price
-    Product product = stock.getProduct();
-
-    if (_currencyInGBPp - product.getCostInGBPp() < 0) {
-      /// not enough money
-      _lastMessage = "$messagePrice £${convertToPence(product.getCostInGBPp())}";
-      return false;
-    }
-
-    /// passed tests; buy! buy! buy!
-    /// reduce stock
-    stock.reduceAvailable();
-
-    /// take cost from active currency...
-    _currencyInGBPp -= product.getCostInGBPp();
-
-    /// ...and add it to the stock of change available
-    /// TODO: until exact coin change is implemented (as opposed to just value processing), the following does not make sense since the machine would never run out of change
-    /// _changeInGBPp += product.getCostInGBPp();
-    /// so instead pull change value out of change and do NOT recycle in provided coins back into the change purse
-    _changeInGBPp -= _currencyInGBPp;
-
-    /// then zero out currency, returning to the user anything left;
-    _returnInGBPp += _currencyInGBPp;
-    _currencyInGBPp = 0;
-
-    _lastMessage = messageThankYou;
-
-    /// while the user enjoys their purchase, report success
-    return true;
+    return false;
   }
 
   @override
-  void returnCoins() {
-    /// these two statements should be transactional (instead of the current atomic but separate) to ensure thread-safety, but this isn't banking software—it is a demo for crying out loud
-    _returnInGBPp += _currencyInGBPp;
-    _currencyInGBPp = 0;
-
-    /// reset state of display
-    updateAndGetCurrentMessageForDisplay();
-  }
+  void returnCoins() {}
 
   @override
-  void collectCoins() {
-    _returnInGBPp = 0;
-  }
+  void collectCoins() {}
 
   List<Product> getProducts() {
     List<Product> products = List();
