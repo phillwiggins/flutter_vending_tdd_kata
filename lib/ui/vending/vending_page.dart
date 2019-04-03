@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vending_kata/data/repository/VendingMachineRepository.dart';
 import 'package:vending_kata/domain/bloc/bloc_provider.dart';
+import 'package:vending_kata/domain/utils.dart';
 import 'package:vending_kata/ui/vending/vending_bloc.dart';
 
 class VendingPage extends StatelessWidget {
@@ -12,14 +13,10 @@ class VendingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final VendingMachineBloc bloc = BlocProvider.of<VendingMachineBloc>(
-        context);
+    final VendingMachineBloc bloc = BlocProvider.of<VendingMachineBloc>(context);
+    
     bloc.init(VendingMachineRepository());
-
-    final double screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double screenWidth = getScreenWidth(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -46,13 +43,14 @@ class VendingPage extends StatelessWidget {
               _currentCoinSizeText(bloc),
               _displayText(bloc),
               _getSpacer(),
-              Text('Products'),
+              _getProductText(),
               _productOneButton(bloc),
               _productTwoButton(bloc),
               _productThreeButton(bloc),
               _getSpacer(),
-              Text('Options'),
+              _getOptionsText(),
               _insertCoinsButton(bloc),
+              _changeCoinButton(bloc),
               _collectChangeButton(bloc),
               _returnButton(bloc),
             ],))
@@ -66,11 +64,16 @@ class VendingPage extends StatelessWidget {
     );
   }
 
+  Text _getOptionsText() => Text('Options');
+
+  Text _getProductText() => Text('Products');
+
   SizedBox _getSpacer({double height = 10}) => SizedBox(height: height);
 
   Widget _productOneButton(VendingMachineBloc bloc) {
     return StreamBuilder<String>(
       stream: bloc.product1,
+      initialData: '',
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         return RaisedButton(
           child: Text(snapshot.data),
@@ -83,6 +86,7 @@ class VendingPage extends StatelessWidget {
   Widget _productTwoButton(VendingMachineBloc bloc) {
     return StreamBuilder<String>(
       stream: bloc.product2,
+      initialData: '',
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         return RaisedButton(
           child: Text(snapshot.data),
@@ -95,6 +99,7 @@ class VendingPage extends StatelessWidget {
   Widget _productThreeButton(VendingMachineBloc bloc) {
     return StreamBuilder<String>(
       stream: bloc.product3,
+      initialData: '',
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         return RaisedButton(
           child: Text(snapshot.data),
@@ -114,7 +119,7 @@ class VendingPage extends StatelessWidget {
   Widget _insertCoinsButton(VendingMachineBloc bloc) {
     return RaisedButton(
       child: Text('Insert Coins'),
-      onPressed: () => bloc.insertCoin(5),
+      onPressed: () => bloc.insertCoin(),
     );
   }
 
@@ -122,6 +127,13 @@ class VendingPage extends StatelessWidget {
     return RaisedButton(
       child: Text('Collect Change'),
       onPressed: () => bloc.collectCoins(),
+    );
+  }
+
+  Widget _changeCoinButton(VendingMachineBloc bloc) {
+    return RaisedButton(
+      child: Text('Change Coin Size'),
+      onPressed: () => bloc.changeCoinSize(),
     );
   }
 

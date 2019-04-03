@@ -20,6 +20,8 @@ class VendingMachineBloc implements BlocBase {
     }
   }
 
+  int coinSize = 5;
+
   final BehaviorSubject<String> _display =
       BehaviorSubject<String>();
   final BehaviorSubject<String> _summary =
@@ -53,6 +55,22 @@ class VendingMachineBloc implements BlocBase {
 
   VendingMachine vendingMachine;
 
+  void changeCoinSize() {
+    switch (coinSize) {
+      case 5:
+        coinSize = 10;
+        break;
+      case 10:
+        coinSize = 20;
+        break;
+      case 20:
+        coinSize = 50;
+        break;
+      case 50:
+        coinSize = 5;
+    }
+  }
+
   Stream<String> getVendingMachineProductDisplay(int productIndex) {
     switch (productIndex) {
       case 0:
@@ -77,13 +95,13 @@ class VendingMachineBloc implements BlocBase {
     updateDisplay();
   }
 
-  bool insertCoin(int coinValue) {
+  bool insertCoin() {
     if (vendingMachine == null) {
       throw new Exception(
           "you must call init() before calling any other methods in this view model");
     }
 
-    final bool result = vendingMachine.insertCoin(coinValue);
+    final bool result = vendingMachine.insertCoin(coinSize);
     updateDisplay();
     return result;
   }
@@ -127,5 +145,6 @@ class VendingMachineBloc implements BlocBase {
     _product2.close();
     _product3.close();
     _summary.close();
+    _change.close();
   }
 }
